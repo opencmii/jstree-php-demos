@@ -73,8 +73,9 @@ if(isset($_GET['operation'])) {
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Title</title>
+		<title>Genesis</title>
 		<meta name="viewport" content="width=device-width" />
+		<!-- localhost or cdnjs.cloudflare.com -->
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
 		<style>
 		html, body { background:#ebebeb; font-size:10px; font-family:Verdana; margin:0; padding:0; }
@@ -98,6 +99,7 @@ if(isset($_GET['operation'])) {
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/jstree.min.js"></script>
+		
 		<script>
 		$(function () {
 			$(window).resize(function () {
@@ -116,11 +118,12 @@ if(isset($_GET['operation'])) {
 						},
 						'check_callback' : true,
 						'themes' : {
-							'responsive' : false
+							'responsive' : false,
+							'stripes'    : true 
 						}
 					},
 					'force_text' : true,
-					'plugins' : ['state','dnd','contextmenu','wholerow']
+					'plugins' : ['state','dnd','contextmenu','wholerow','search','types']
 				})
 				.on('delete_node.jstree', function (e, data) {
 					$.get('?operation=delete_node', { 'id' : data.node.id })
@@ -156,6 +159,7 @@ if(isset($_GET['operation'])) {
 						});
 				})
 				.on('changed.jstree', function (e, data) {
+					console.log(data.selected);
 					if(data && data.selected && data.selected.length) {
 						$.get('?operation=get_content&id=' + data.selected.join(':'), function (d) {
 							$('#data .default').text(d.content).show();
